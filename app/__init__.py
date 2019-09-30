@@ -1,7 +1,6 @@
 from flask import Flask, g
 from config import Config
 from flask_bootstrap import Bootstrap
-#from flask_login import LoginManager
 import sqlite3
 import os
 
@@ -10,8 +9,6 @@ app = Flask(__name__)
 Bootstrap(app)
 app.config.from_object(Config)
 
-# TODO: Handle login management better, maybe with flask_login?
-#login = LoginManager(app)
 
 # get an instance of the db
 def get_db():
@@ -30,6 +27,7 @@ def init_db():
         db.commit()
 
 # perform generic query, not very secure yet
+# TODO make secure (just do it xd)
 def query_db(query, one=False):
     db = get_db()
     cursor = db.execute(query)
@@ -53,5 +51,5 @@ if not os.path.exists(app.config['DATABASE']):
 
 if not os.path.exists(app.config['UPLOAD_PATH']):
     os.mkdir(app.config['UPLOAD_PATH'])
-
+    
 from app import routes
