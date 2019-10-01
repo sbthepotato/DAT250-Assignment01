@@ -20,6 +20,7 @@
                     <h4 class="card-text">Comments</h4>
                     <form action="" method="POST" novalidate>
                         {{ wtf.form_field(form.comment) }}
+                        {{ form.csrf_token }}
                         {{ wtf.form_field(form.submit, class="btn btn-primary") }}
                     </form>
                     <br>
