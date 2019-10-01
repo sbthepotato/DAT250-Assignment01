@@ -66,6 +66,7 @@
                             {{ wtf.form_field(form.movie) }}
                             {{ wtf.form_field(form.nationality) }}
                             {{ wtf.form_field(form.birthday) }}
+                            {{ form.csrf_token }}
                             {{ wtf.form_field(form.submit, class="btn btn-primary") }}
                         </form>
                     </div>

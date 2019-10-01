@@ -10,6 +10,7 @@
                     <form action="" method="POST" novalidate enctype="multipart/form-data">
                         {{ wtf.form_field(form.content) }}
                         {{ wtf.form_field(form.image) }}
+                        {{ form.csrf_token }}
                         {{ wtf.form_field(form.submit, class="btn btn-primary") }}
                     </form>
                 </div>

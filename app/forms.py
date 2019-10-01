@@ -5,7 +5,7 @@ from flask_wtf.file import FileAllowed
 
 # defines all forms in the application, these will be instantiated by the template,
 # and the routes.py will read the values of the fields
-# DONE: Add validation, maybe use wtforms.validators??
+
 # https://wtforms.readthedocs.io/en/stable/validators.html
 # https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/
 # TODO: There was some important security feature that wtforms provides, but I don't remember what; implement it
@@ -14,12 +14,12 @@ from flask_wtf.file import FileAllowed
 
 class LoginForm(FlaskForm):
     username = StringField('Username', [
-        validators.InputRequired(message='Must input username'), 
-        validators.Length(min=4, max=32, message='Username is between 4 and 32 characters')],
-        render_kw={'placeholder': 'Username'})
+            validators.InputRequired(message='Must input username'), 
+            validators.Length(min=4, max=32, message='Username is between 4 and 32 characters')],
+        render_kw={'placeholder': 'Username'}) 
     password = PasswordField('Password', [
-        validators.InputRequired(message='Must input password'),
-        validators.Length(min=6, max=32, message='Password is between 6 and 32 characters')],
+            validators.InputRequired(message='Must input password'),
+            validators.Length(min=6, max=32, message='Password is between 6 and 32 characters')],
         render_kw={'placeholder': 'Password'})
     remember_me = BooleanField('Remember me') 
     submit = SubmitField('Sign In')
@@ -43,8 +43,7 @@ class RegisterForm(FlaskForm):
         validators.Length(min=6, max=32, message='Password must be between 6 & 32 characters')], 
         render_kw={'placeholder': 'Password'})
     confirm_password = PasswordField('Confirm Password', [
-        validators.InputRequired(message='Must input password again'),
-        validators.Length(min=6, max=32, message='Password must be between 6 & 32 characters')], 
+        validators.InputRequired(message='Must input password again')], 
         render_kw={'placeholder': 'Confirm Password'})
     submit = SubmitField('Sign Up')
 

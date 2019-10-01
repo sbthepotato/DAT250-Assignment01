@@ -20,6 +20,7 @@
                         {{ wtf.form_field(form.login.username) }}
                         {{ wtf.form_field(form.login.password) }}
                         {{ wtf.form_field(form.login.remember_me) }}
+                        {{ form.csrf_token }}
                         {{ wtf.form_field(form.login.submit, class="btn btn-primary") }}
                     </form>
                 </div>
@@ -38,6 +39,7 @@
                         {{ wtf.form_field(form.register.username) }}
                         {{ wtf.form_field(form.register.password) }}
                         {{ wtf.form_field(form.register.confirm_password) }}
+                        {{ form.csrf_token }}
                         {{ wtf.form_field(form.register.submit, class="btn btn-primary") }}
                     </form>
                 </div>
