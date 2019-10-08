@@ -47,10 +47,11 @@
                 </li>
                 <li class="nav-item">
                     {% if title == 'Profile' %}
-                    <a class="nav-link" href={{ url_for('profile', username=username) }}>Profile <span
+                    <a class="nav-link" href={{ url_for('profile', username=session.get('username')) }}>Profile <span
                             class="sr-only">(current)</span></a>
                     {% else %}
-                    <a class="nav-link" href={{ url_for('profile', username=username) }}>Profile</a>
+                    <!-- profile links to your own to avoid being stuck on someone elses profile -->
+                    <a class="nav-link" href={{ url_for('profile', username=session.get('username')) }}>Profile</a>
                     {% endif %}
                 </li>
             </ul>

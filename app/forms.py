@@ -6,20 +6,14 @@ from flask_wtf.file import FileAllowed
 # defines all forms in the application, these will be instantiated by the template,
 # and the routes.py will read the values of the fields
 
-# https://wtforms.readthedocs.io/en/stable/validators.html
-# https://flask.palletsprojects.com/en/1.1.x/patterns/wtforms/
-# TODO: There was some important security feature that wtforms provides, but I don't remember what; implement it
-# https://wtforms.readthedocs.io/en/stable/csrf.html
-
-
 class LoginForm(FlaskForm):
     username = StringField('Username', [
-            validators.InputRequired(message='Must input username'), 
-            validators.Length(min=4, max=32, message='Username is between 4 and 32 characters')],
+        validators.InputRequired(message='Must input username'), 
+        validators.Length(min=4, max=32, message='Username is between 4 and 32 characters')],
         render_kw={'placeholder': 'Username'}) 
     password = PasswordField('Password', [
-            validators.InputRequired(message='Must input password'),
-            validators.Length(min=6, max=32, message='Password is between 6 and 32 characters')],
+        validators.InputRequired(message='Must input password'),
+        validators.Length(min=6, max=32, message='Password is between 6 and 32 characters')],
         render_kw={'placeholder': 'Password'})
     remember_me = BooleanField('Remember me') 
     submit = SubmitField('Sign In')
@@ -55,7 +49,8 @@ class IndexForm(FlaskForm):
 
 class PostForm(FlaskForm):
     content = TextAreaField('New Post', render_kw={'placeholder': 'What are you thinking about?'})
-    image = FileField('Image',validators=[FileAllowed(['jpg','jpeg','gif','png'], message='Images only!')])
+    image = FileField('Image',validators=[
+        FileAllowed(['jpg','jpeg','gif','png'], message='Images only!')])
     submit = SubmitField('Post')
 
 

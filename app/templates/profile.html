@@ -8,6 +8,7 @@
                 <div class="card-body">
                     <h1 class="card-text">About {{username}}</h1>
                     {% if session.get('username') ==  username %}
+                        <!-- only shows edit button if session username matches url username -->
                         <button type="button" class="btn btn-link" id="edit-button"><span class="fa fa-edit"></span>&nbsp;Edit</button>
                     {% endif %}
                     <!--View details-->
