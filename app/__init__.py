@@ -1,3 +1,4 @@
+from app import routes
 from flask import Flask, g
 from config import Config
 from flask_bootstrap import Bootstrap
@@ -9,6 +10,7 @@ import os
 app = Flask(__name__)
 Bootstrap(app)
 app.config.from_object(Config)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 # secret key for sessions, see: https://flask.palletsprojects.com/en/1.1.x/quickstart/#sessions
 secret_key = os.urandom(32)
@@ -18,11 +20,14 @@ app.config['SECRET_KEY'] = secret_key
 # https://flask-wtf.readthedocs.io/en/latest/csrf.html#setup
 csrf = CSRFProtect(app)
 
+
 def create_app():
     app = Flask(__name__)
     csrf.init_app(app)
 
 # get an instance of the db
+
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -31,6 +36,8 @@ def get_db():
     return db
 
 # initialize db for the first time
+
+
 def init_db():
     with app.app_context():
         db = get_db()
@@ -39,6 +46,8 @@ def init_db():
         db.commit()
 
 # perform generic query, not very secure yet
+
+
 def query_db(query, one=False):
     db = get_db()
     cursor = db.execute(query)
@@ -57,11 +66,10 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
 # initialize db if it does not exist
 if not os.path.exists(app.config['DATABASE']):
     init_db()
 
 if not os.path.exists(app.config['UPLOAD_PATH']):
     os.mkdir(app.config['UPLOAD_PATH'])
-    
-from app import routes

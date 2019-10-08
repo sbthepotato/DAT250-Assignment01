@@ -52,10 +52,10 @@ class IndexForm(FlaskForm):
     login = FormField(LoginForm)
     register = FormField(RegisterForm)
 
-# TODO: Fix image validator
+
 class PostForm(FlaskForm):
     content = TextAreaField('New Post', render_kw={'placeholder': 'What are you thinking about?'})
-    image = FileField('Image',validators=[FileAllowed(['jpg','png'], message='Images only!')])
+    image = FileField('Image',validators=[FileAllowed(['jpg','jpeg','gif','png'], message='Images only!')])
     submit = SubmitField('Post')
 
 

@@ -183,7 +183,8 @@ def profile(username):
                     form.birthday.data,
                     username))
             else:
-                flash('You are not logged in as that user you tried to edit the profile of')
+                flash(
+                    'You are not logged in as that user you tried to edit the profile of')
                 return redirect(url_for('stream', username=session.get('username')))
             return redirect(url_for('profile', username=username))
         user = query_db(
