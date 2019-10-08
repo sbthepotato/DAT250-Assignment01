@@ -3,7 +3,8 @@ from app import app, query_db
 from app.forms import IndexForm, PostForm, FriendsForm, ProfileForm, CommentsForm
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-import os, time
+import os
+import time
 
 # this file contains all the different routes, and the logic for communicating with the database
 
@@ -11,11 +12,11 @@ import os, time
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    user = query_db('SELECT * FROM Users WHERE username="{}";'.format(request.cookies.get('username')), one=True)
+    user = query_db(
+        'SELECT * FROM Users WHERE username="{}";'.format(request.cookies.get('username')), one=True)
     if session.get('login_attempts') == None:
         session['login_attempts'] = int(0)
         session['login_block'] = datetime.now()
-    
 
     if user == None:
         form = IndexForm()
@@ -23,37 +24,45 @@ def index():
         if form.login.validate_on_submit() and form.login.submit.data:
             if datetime.now() > session.get('login_block'):
                 if int(session.get('login_attempts')) >= 3:
-                    flash('You have failed too many login attempts, try again in 30 seconds')
-                    session['login_block'] = datetime.now() + timedelta(seconds=30)
+                    flash(
+                        'You have failed too many login attempts, try again in 30 seconds')
+                    session['login_block'] = datetime.now() + \
+                        timedelta(seconds=30)
                     session['login_attempts'] = int(0)
                 else:
-                    user = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.login.username.data), one=True)
+                    user = query_db(
+                        'SELECT * FROM Users WHERE username="{}";'.format(form.login.username.data), one=True)
                     if user == None:
-                        session['login_attempts'] = int(session.get('login_attempts')+1)
+                        session['login_attempts'] = int(
+                            session.get('login_attempts')+1)
                         flash('Sorry, This username or password is incorrect')
                     elif check_password_hash(user['password'], form.login.password.data):
                         session['username'] = form.login.username.data
                         session['password'] = user['password']
                         if form.login.remember_me.data == True:
-                            response = make_response(redirect(url_for('stream', username=form.login.username.data)))
-                            response.set_cookie('username', form.login.username.data)
+                            response = make_response(
+                                redirect(url_for('stream', username=form.login.username.data)))
+                            response.set_cookie(
+                                'username', form.login.username.data)
                             response.set_cookie('password', user['password'])
                             return response
                         return redirect(url_for('stream', username=form.login.username.data))
                     else:
-                        session['login_attempts'] = int(session.get('login_attempts')+1)
+                        session['login_attempts'] = int(
+                            session.get('login_attempts')+1)
                         flash('Sorry, This username or password is incorrect')
             else:
                 flash("you are still blocked from logging in, wait a bit longer")
 
         # if register form is submitted
         elif form.register.validate_on_submit() and form.register.submit.data:
-            user_reg = query_db('SELECT * FROM Users WHERE username="{}";'.format(form.register.username.data), one=True)
-            if user_reg == None: 
+            user_reg = query_db(
+                'SELECT * FROM Users WHERE username="{}";'.format(form.register.username.data), one=True)
+            if user_reg == None:
                 query_db('INSERT INTO Users (username, first_name, last_name, password) VALUES("{}", "{}", "{}", "{}");'.format(
-                    form.register.username.data, 
-                    form.register.first_name.data, 
-                    form.register.last_name.data, 
+                    form.register.username.data,
+                    form.register.first_name.data,
+                    form.register.last_name.data,
                     generate_password_hash(form.register.password.data)))
                 return redirect(url_for('index'))
             else:
@@ -86,9 +95,9 @@ def stream(username):
                     app.config['UPLOAD_PATH'], form.image.data.filename)
                 form.image.data.save(path)
             query_db('INSERT INTO Posts (u_id, content, image, creation_time) VALUES({}, "{}", "{}", \'{}\');'.format(
-                user['id'], 
-                form.content.data, 
-                form.image.data.filename, 
+                user['id'],
+                form.content.data,
+                form.image.data.filename,
                 datetime.now()))
             return redirect(url_for('stream', username=username))
         posts = query_db(
@@ -158,14 +167,24 @@ def profile(username):
     elif user['password'] == session.get('password'):
         form = ProfileForm()
         if form.is_submitted():
-            query_db('UPDATE Users SET education="{}", employment="{}", music="{}", movie="{}", nationality="{}", birthday=\'{}\' WHERE username="{}" ;'.format(
-                form.education.data, 
-                form.employment.data, 
-                form.music.data, 
-                form.movie.data, 
-                form.nationality.data, 
-                form.birthday.data, 
-                username))
+            user = query_db(
+                'SELECT * FROM Users WHERE username="{}";'.format(username), one=True)
+            if user == None:
+                flash(
+                    'you are not logged in, every error shouldnt happen, this error extra shouldnt happen')
+                return redirect(url_for('index'))
+            elif user['password'] == session.get('password'):
+                query_db('UPDATE Users SET education="{}", employment="{}", music="{}", movie="{}", nationality="{}", birthday=\'{}\' WHERE username="{}" ;'.format(
+                    form.education.data,
+                    form.employment.data,
+                    form.music.data,
+                    form.movie.data,
+                    form.nationality.data,
+                    form.birthday.data,
+                    username))
+            else:
+                flash('You are not logged in')
+                return redirect(url_for('index'))
             return redirect(url_for('profile', username=username))
         user = query_db(
             'SELECT * FROM Users WHERE username="{}";'.format(username), one=True)
