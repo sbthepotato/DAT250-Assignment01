@@ -24,7 +24,7 @@ def index():
         form = IndexForm()
         if form.login.validate_on_submit() and form.login.submit.data:
             if datetime.now() > session.get('login_block'):
-                if int(session.get('login_attempts')) >= 3:
+                if int(session.get('login_attempts')) >= 4:
                     flash('You have failed too many login attempts, try again in 30 seconds')
                     session['login_block'] = datetime.now() + timedelta(seconds=30)
                     session['login_attempts'] = int(0)
@@ -47,7 +47,7 @@ def index():
                         session['login_attempts'] = int(session.get('login_attempts')+1)
                         flash('Sorry, This username or password is incorrect')
             else:
-                flash("you are still blocked from logging in, wait a bit longer")
+                flash("you are still blocked from logging in, please wait a bit longer")
 
         # if register form is submitted
         elif form.register.validate_on_submit() and form.register.submit.data:
@@ -166,8 +166,7 @@ def profile(username):
         if form.is_submitted():
             user = query_db('SELECT * FROM Users WHERE username="{}";'.format(username), one=True)
             if user == None:
-                flash(
-                    'you are not logged in, every error shouldnt happen, this error extra shouldnt happen')
+                flash('you are not logged in. Every error shouldnt happen, but this error really extra shouldnt happen')
                 return redirect(url_for('index'))
             elif user['password'] == session.get('password'):
                 query_db('UPDATE Users SET education="{}", employment="{}", music="{}", movie="{}", nationality="{}", birthday=\'{}\' WHERE username="{}" ;'.format(
