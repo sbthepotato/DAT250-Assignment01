@@ -58,6 +58,7 @@ def index():
                     form.register.first_name.data,
                     form.register.last_name.data,
                     generate_password_hash(form.register.password.data)))
+                flash('User ' + form.register.username.data + ' created')
                 return redirect(url_for('index'))
             else:
                 flash("This username is already taken")
